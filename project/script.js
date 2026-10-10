@@ -18,6 +18,7 @@ const cardDetails = document.querySelector(".saved-card__details");
 const statusText = document.querySelector(".workspace__status");
 
 const STORAGE_KEY = "workout-card";
+const DRAFT_KEY = "workout-draft";
 
 function saveCard(card) {
   const json = JSON.stringify(card);
@@ -59,6 +60,7 @@ function showCard(card) {
 
 createButton.addEventListener("click", function () {
   form.reset();
+  sessionStorage.removeItem(DRAFT_KEY);
 
   emptyPanel.hidden = true;
   viewerPanel.hidden = true;
@@ -80,24 +82,38 @@ form.addEventListener("submit", function (event) {
   };
 
   saveCard(card);
-  showCard(card);
+  sessionStorage.removeItem(DRAFT_KEY);
+  showCard(card); 
 });
 
 editButton.addEventListener("click", function () {
   const savedCard = localStorage.getItem(STORAGE_KEY);
+
 
   if (savedCard === null) {
     return;
   }
 
   const card = JSON.parse(savedCard);
+  const savedDraft = sessionStorage.getItem(DRAFT_KEY);
 
+if (savedDraft !== null) {
+  const draft = JSON.parse(savedDraft);
+
+  form.elements["type"].value = draft.type;
+  form.elements["duration"].value = draft.duration;
+  form.elements["trainer"].value = draft.trainer;
+  form.elements["capacity"].value = draft.capacity;
+  form.elements["location"].value = draft.location;
+  form.elements["description"].value = draft.description;
+} else {
   form.elements["type"].value = card.type;
   form.elements["duration"].value = card.duration;
   form.elements["trainer"].value = card.trainer;
   form.elements["capacity"].value = card.capacity;
   form.elements["location"].value = card.location;
   form.elements["description"].value = card.description;
+}
 
   viewerPanel.hidden = true;
   emptyPanel.hidden = true;
@@ -112,6 +128,7 @@ deleteButton.addEventListener("click", function () {
   emptyPanel.hidden = false;
 
   statusText.textContent = "Карточка удалена";
+  sessionStorage.removeItem(DRAFT_KEY);
 });
 
 cancelButton.addEventListener("click", function () {
@@ -124,6 +141,7 @@ cancelButton.addEventListener("click", function () {
     viewerPanel.hidden = true;
     emptyPanel.hidden = false;
   }
+  sessionStorage.removeItem(DRAFT_KEY);
 });
 
 const savedCard = localStorage.getItem(STORAGE_KEY);
@@ -135,3 +153,18 @@ if (savedCard !== null) {
   editorPanel.hidden = true;
   viewerPanel.hidden = true;
 }
+
+form.addEventListener("input", function () {
+  const formData = new FormData(form);
+
+  const draft = {
+    type: formData.get("type"),
+    duration: formData.get("duration"),
+    trainer: formData.get("trainer"),
+    capacity: formData.get("capacity"),
+    location: formData.get("location"),
+    description: formData.get("description")
+  };
+
+  sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+});
