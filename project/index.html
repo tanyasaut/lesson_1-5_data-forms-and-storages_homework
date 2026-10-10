@@ -7,7 +7,7 @@
       name="description"
       content="Домашняя работа по формам, JSON и Web Storage"
     />
-    <title>Сохраненная карточка</title>
+    <title>Тренировки</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
@@ -26,10 +26,9 @@
     <main class="page-shell">
       <section class="intro" aria-labelledby="page-title">
         <p class="intro__eyebrow">Формы и хранилища</p>
-        <h1 class="intro__title" id="page-title">Сохраненная карточка</h1>
+        <h1 class="intro__title" id="page-title">Карточки тренировок</h1>
         <p class="intro__lead">
-          Выберите тему, настройте форму и самостоятельно свяжите ввод,
-          отображение и хранение данных.
+          Карточки различных видов тренировок.
         </p>
       </section>
 
@@ -37,7 +36,7 @@
         <header class="workspace__header">
           <div>
             <p class="workspace__kicker">Рабочая область</p>
-            <h2 class="workspace__title" id="workspace-title">Ваша тема</h2>
+            <h2 class="workspace__title" id="workspace-title">Тренировки</h2>
           </div>
 
           <p class="workspace__status" aria-live="polite">Данные еще не проверены</p>
@@ -72,7 +71,7 @@
             </header>
 
             <!-- Это один пример связки label, id и name. Остальные поля создайте сами. -->
-            <div class="field">
+            <!-- <div class="field">
               <label class="field__label" for="card-title">Название</label>
               <input
                 class="field__control"
@@ -84,9 +83,105 @@
                 required
               />
               <span class="field__hint">Минимум 3 символа</span>
-            </div>
+            </div> -->
 
             <!-- Добавьте поля, которые описывают именно вашу тему. -->
+            <div class="field">
+  <label class="field__label" for="workout-type">
+    Вид тренировки
+  </label>
+  <select
+    class="field__control"
+    id="workout-type"
+    name="type"
+    required
+  >
+    <option value="">Выберите вид тренировки</option>
+    <option value="Силовая тренировка">Силовая тренировка</option>
+    <option value="Кардио">Кардио</option>
+    <option value="Йога">Йога</option>
+    <option value="Растяжка">Растяжка</option>
+    <option value="Пилатес">Пилатес</option>
+  </select>
+</div>
+
+<div class="field">
+  <label class="field__label" for="workout-duration">
+    Длительность (минуты)
+  </label>
+  <input
+    class="field__control"
+    id="workout-duration"
+    name="duration"
+    type="number"
+    min="1"
+    max="180"
+    required
+  />
+</div>
+
+<div class="field">
+  <label class="field__label" for="workout-trainer">
+    Имя тренера
+  </label>
+  <input
+    class="field__control"
+    id="workout-trainer"
+    name="trainer"
+    type="text"
+    minlength="2"
+    maxlength="60"
+    placeholder="Например, Анна Иванова"
+    required
+  />
+</div>
+
+<div class="field">
+  <label class="field__label" for="workout-capacity">
+    Максимальное количество участников
+  </label>
+  <input
+    class="field__control"
+    id="workout-capacity"
+    name="capacity"
+    type="number"
+    min="1"
+    max="30"
+    required
+  />
+</div>
+
+<div class="field">
+  <label class="field__label" for="workout-location">
+    Место проведения
+  </label>
+  <input
+    class="field__control"
+    id="workout-location"
+    name="location"
+    type="text"
+    minlength="2"
+    maxlength="100"
+    placeholder="Например, зал № 2 или парк"
+    required
+  />
+</div>
+
+<div class="field">
+  <label class="field__label" for="workout-description">
+    Описание тренировки
+  </label>
+  <textarea
+    class="field__control"
+    id="workout-description"
+    name="description"
+    minlength="5"
+    maxlength="500"
+    placeholder="Какие упражнения входят в занятие?"
+    required
+  ></textarea>
+</div>
+                        
 
             <div class="card-form__actions">
               <button class="button button--primary" type="submit">
