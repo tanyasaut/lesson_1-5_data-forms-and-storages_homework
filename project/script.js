@@ -19,6 +19,11 @@ const statusText = document.querySelector(".workspace__status");
 
 const STORAGE_KEY = "workout-card";
 
+function saveCard(card) {
+  const json = JSON.stringify(card);
+  localStorage.setItem(STORAGE_KEY, json);
+}
+
 function showCard(card) {
   cardTitle.textContent = card.type;
   cardDetails.replaceChildren();
@@ -74,7 +79,7 @@ form.addEventListener("submit", function (event) {
     description: formData.get("description")
   };
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(card));
+  saveCard(card);
   showCard(card);
 });
 
