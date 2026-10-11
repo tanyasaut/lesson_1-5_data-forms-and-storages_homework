@@ -197,7 +197,9 @@ textarea {
 
 .card-form,
 .saved-card {
+  justify-self: center;
   width: 100%;
+  max-width: 760px;
   padding: 42px 48px 48px;
 }
 
@@ -258,6 +260,17 @@ textarea.field__control {
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.45;
+}
+
+.field__error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.field__control--invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px rgb(180 35 24 / 12%);
 }
 
 .card-form__actions,
@@ -397,12 +410,54 @@ textarea.field__control {
   .app-state__content,
   .card-form,
   .saved-card {
-    padding: 30px 22px 34px;
-  }
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 42px 48px 48px;
+}
 
   .saved-card__row {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+}
+
+.card-collection {
+  padding: 32px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-soft);
+}
+
+.card-collection__create {
+  display: block;
+  margin: 20px 0 0 auto;
+}
+
+.card-collection__list {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.card-collection__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #d8d8d8;
+  border-radius: 12px;
+}
+
+.card-collection__item button {
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .card-collection__item {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
