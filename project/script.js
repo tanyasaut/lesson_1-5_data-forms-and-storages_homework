@@ -34,9 +34,27 @@ let currentCardId = null;
 const CALM_TYPES = ["Йога", "Растяжка", "Пилатес"];
 const CALM_MAX_DURATION = 60;
 
-function getDependentError() {
+function getDurationError() {
   const type = typeSelect.value;
-  const duration = Number(durationInput.value);
+  const raw = durationInput.value;
+
+  if (raw === "") {
+    return "Укажите длительность";
+  }
+
+  const duration = Number(raw);
+
+  if (Number.isNaN(duration)) {
+    return "Длительность должна быть числом";
+  }
+
+  if (duration < 1) {
+    return "Длительность должна быть не меньше 1 минуты";
+  }
+
+  if (duration > 180) {
+    return "Длительность не должна превышать 180 минут";
+  }
 
   if (CALM_TYPES.includes(type) && duration > CALM_MAX_DURATION) {
     return `Для «${type}» длительность не должна превышать ${CALM_MAX_DURATION} минут`;
@@ -46,11 +64,20 @@ function getDependentError() {
 }
 
 function updateDurationError() {
-  const message = getDependentError();
+  const message = getDurationError();
+
+  durationInput.setCustomValidity(message);
 
   durationError.textContent = message;
   durationError.hidden = message === "";
   durationInput.classList.toggle("field__control--invalid", message !== "");
+}
+
+function clearDurationError() {
+  durationInput.setCustomValidity("");
+  durationError.textContent = "";
+  durationError.hidden = true;
+  durationInput.classList.remove("field__control--invalid");
 }
 
 function loadCards() {
@@ -135,7 +162,7 @@ function showCard(card) {
 
   const details = [
     ["Вид тренировки", card.type],
-    ["Длительность", `${card.duration} минут`],
+    ["Длительность", `${card.duration} мин`],
     ["Тренер", card.trainer],
     ["Количество участников", card.capacity],
     ["Место проведения", card.location],
@@ -166,7 +193,7 @@ function showCard(card) {
 function startNewCard() {
   currentCardId = null;
   form.reset();
-  updateDurationError();  
+  clearDurationError(); 
   sessionStorage.removeItem(DRAFT_KEY);
   emptyPanel.hidden = true;
   viewerPanel.hidden = true;
@@ -180,13 +207,6 @@ createButtons.forEach(function (button) {
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();
-
-    updateDurationError();
-
-  if (getDependentError() !== "") {
-    durationInput.focus();
-    return;
-  }
 
   const formData = new FormData(form);
 
@@ -340,6 +360,8 @@ if (cards.length > 0) {
   viewerPanel.hidden = true;
 }
 
+typeSelect.addEventListener("change", updateDurationError);
+durationInput.addEventListener("input", updateDurationError);
 
 form.addEventListener("input", function () {
   const formData = new FormData(form);
@@ -355,11 +377,33 @@ form.addEventListener("input", function () {
     description: formData.get("description")
   };
 
-  typeSelect.addEventListener("change", updateDurationError);
-  durationInput.addEventListener("input", updateDurationError);
   sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
 });
 
-document.addEventListener("click", function (event) {
-  console.log("Нажат элемент:", event.target);
-}, true);
+window.addEventListener("storage", function (event) {
+  if (event.key !== STORAGE_KEY) {
+    return;
+  }
+
+  cards = loadCards();
+  renderCollection();
+
+  if (!editorPanel.hidden) {
+    return;
+  }
+
+  if (cards.length === 0) {
+    currentCardId = null;
+    viewerPanel.hidden = true;
+    emptyPanel.hidden = false;
+    statusText.textContent = "Карточка удалена в другой вкладке";
+    return;
+  }
+
+  const stillExists = cards.find(function (card) {
+    return card.id === currentCardId;
+  });
+
+  showCard(stillExists ?? cards[0]);
+  statusText.textContent = "Данные обновлены из другой вкладки";
+});

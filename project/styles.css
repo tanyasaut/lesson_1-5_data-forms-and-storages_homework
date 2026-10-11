@@ -203,6 +203,31 @@ textarea {
   padding: 42px 48px 48px;
 }
 
+.app-state--viewer {
+  grid-template-columns: 1fr;
+  margin: 0 32px 32px;
+}
+
+.app-state--viewer .app-state__index {
+  display: none;
+}
+
+.app-state--empty,
+.app-state--editor {
+  grid-template-columns: 1fr;
+}
+
+.app-state--empty .app-state__index,
+.app-state--editor .app-state__index {
+  display: none;
+}
+
+.app-state--empty .app-state__content {
+  margin-inline: auto;
+  max-width: 760px;
+  padding: 48px;
+}
+
 .card-form__header {
   display: flex;
   align-items: start;
